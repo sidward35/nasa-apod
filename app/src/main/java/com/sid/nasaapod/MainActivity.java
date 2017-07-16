@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import java.util.ListIterator;
 public class MainActivity extends AppCompatActivity {
 
     public ImageView imageView;
+    public TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +39,20 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         imageView = (ImageView)findViewById(R.id.imageView);
+        textView = (TextView)findViewById(R.id.textView);
 
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = jsonParser.getJSONFromUrl("https://api.nasa.gov/planetary/apod?api_key=NNKOjkoul8n1CH18TWA9gwngW1s1SmjESPjNoUFo", null);
-        String url = "https://fabiusmaximus.files.wordpress.com/2012/12/20121230-no-error.png";
+        String url = "https://fabiusmaximus.files.wordpress.com/2012/12/20121230-no-error.png", text="Title not found";
         try {
             url = jsonObject.get("hdurl").toString();
+            text = jsonObject.get("title").toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
         Log.e("url=",url);
         imageView.setImageBitmap(getBitmapFromURL(url));
+        textView.setText(text);
     }
 
     public static Bitmap getBitmapFromURL(String src) {
