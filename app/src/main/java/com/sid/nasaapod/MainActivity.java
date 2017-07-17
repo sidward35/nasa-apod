@@ -1,8 +1,10 @@
 package com.sid.nasaapod;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.net.Uri;
 import android.os.StrictMode;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
@@ -38,6 +40,8 @@ import java.util.ListIterator;
 
 public class MainActivity extends AppCompatActivity {
 
+    public String downloadURL="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +51,20 @@ public class MainActivity extends AppCompatActivity {
         //final ScrollView scrollView = (ScrollView)findViewById(R.id.scrollView);
         //final int[] subtraction = {0};
         updateImages(/*subtraction[0]*/);
-        Button button = (Button)findViewById(R.id.button);
+        Button button = (Button)findViewById(R.id.button), download = (Button)findViewById(R.id.button2);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 //subtraction[0] +=10;
                 updateImages(/*subtraction[0]*/);
                 //scrollView.fullScroll(ScrollView.FOCUS_UP);
+            }
+        });
+        download.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadURL));
+                startActivity(browserIntent);
             }
         });
     }
@@ -107,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
             text = jsonObject.get("title").toString();
             captureDate = jsonObject.get("date").toString();
             author = jsonObject.get("copyright").toString();
+            downloadURL = url;
+            downloadURL = jsonObject.get("hdurl").toString();
             desc = jsonObject.get("explanation").toString();
         } catch (JSONException e) {
             e.printStackTrace();
