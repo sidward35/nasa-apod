@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = jsonParser.getJSONFromUrl("https://api.nasa.gov/planetary/apod?api_key=uZvWdb4HL99nymXFPQlFfUBVZSuumS0MvqlVUHXs&date="+date, null);
         Log.e("DATE", date);
-        String desc="No description", url = "https://fabiusmaximus.files.wordpress.com/2012/12/20121230-no-error.png", text="Title not found", author="unknown", captureDate="Date not found";
+        String desc="No description.", url = "https://fabiusmaximus.files.wordpress.com/2012/12/20121230-no-error.png", text="Title not found", author="unknown", captureDate="Date not found";
         try {
             url = jsonObject.get("url").toString();
             text = jsonObject.get("title").toString();
@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         textView.setText(text);
         textView5.setText("    "+desc);
         textView5.setMovementMethod(new ScrollingMovementMethod());
+        textView5.scrollTo(0,0);
         textView2.setText("Published by "+author+" on " + captureDate);
     }
 
