@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -41,15 +43,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        final ScrollView scrollView = (ScrollView)findViewById(R.id.scrollView);
         //final int[] subtraction = {0};
         updateImages(/*subtraction[0]*/);
-
         Button button = (Button)findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 //subtraction[0] +=10;
                 updateImages(/*subtraction[0]*/);
+                scrollView.fullScroll(ScrollView.FOCUS_UP);
             }
         });
     }
