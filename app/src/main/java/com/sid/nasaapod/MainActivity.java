@@ -8,6 +8,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_layout);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         //final ScrollView scrollView = (ScrollView)findViewById(R.id.scrollView);
@@ -59,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateImages(){
         ImageView imageView = (ImageView)findViewById(R.id.imageView);//, imageView2 = (ImageView)findViewById(R.id.imageView2), imageView3 = (ImageView)findViewById(R.id.imageView3), imageView4 = (ImageView)findViewById(R.id.imageView4), imageView5 = (ImageView)findViewById(R.id.imageView5), imageView6 = (ImageView)findViewById(R.id.imageView6), imageView7 = (ImageView)findViewById(R.id.imageView7), imageView8 = (ImageView)findViewById(R.id.imageView8), imageView9 = (ImageView)findViewById(R.id.imageView9), imageView10 = (ImageView)findViewById(R.id.imageView10);
-        TextView textView = (TextView)findViewById(R.id.textView);//, textView2 = (TextView)findViewById(R.id.textView2), textView3 = (TextView)findViewById(R.id.textView3), textView4 = (TextView)findViewById(R.id.textView4), textView5 = (TextView)findViewById(R.id.textView5), textView6 = (TextView)findViewById(R.id.textView6), textView7 = (TextView)findViewById(R.id.textView7), textView8 = (TextView)findViewById(R.id.textView8), textView9 = (TextView)findViewById(R.id.textView9), textView10 = (TextView)findViewById(R.id.textView10);
+        TextView textView = (TextView)findViewById(R.id.textView), textView2 = (TextView)findViewById(R.id.textView2), /*textView3 = (TextView)findViewById(R.id.textView3), textView4 = (TextView)findViewById(R.id.textView4), */textView5 = (TextView)findViewById(R.id.textView5);//, textView6 = (TextView)findViewById(R.id.textView6), textView7 = (TextView)findViewById(R.id.textView7), textView8 = (TextView)findViewById(R.id.textView8), textView9 = (TextView)findViewById(R.id.textView9), textView10 = (TextView)findViewById(R.id.textView10);
 
-        getCard(imageView, textView, ""+((int)(Math.random()*21+1996))+"-"+((int)(Math.random()*12+1))+"-"+((int)(Math.random()*28+1)));
+        getCard(imageView, textView, textView2, textView5, ""+((int)(Math.random()*21+1996))+"-"+((int)(Math.random()*12+1))+"-"+((int)(Math.random()*28+1)));
         //getCard(imageView2, textView2, ""+((int)(Math.random()*21+1996))+"-"+((int)(Math.random()*12+1))+"-"+((int)(Math.random()*28+1)));
         //getCard(imageView3, textView3, ""+((int)(Math.random()*21+1996))+"-"+((int)(Math.random()*12+1))+"-"+((int)(Math.random()*28+1)));
         //getCard(imageView4, textView4, ""+((int)(Math.random()*21+1996))+"-"+((int)(Math.random()*12+1))+"-"+((int)(Math.random()*28+1)));
@@ -96,19 +97,26 @@ public class MainActivity extends AppCompatActivity {
         getCard(imageView10, textView10, ""+(Integer.parseInt(formattedDate.substring(0,4))-(10+sub))+formattedDate.substring(4));
     }*/
 
-    public void getCard(ImageView imageView, TextView textView, String date){
+    public void getCard(ImageView imageView, TextView textView, TextView textView2, TextView textView5, String date){
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = jsonParser.getJSONFromUrl("https://api.nasa.gov/planetary/apod?api_key=uZvWdb4HL99nymXFPQlFfUBVZSuumS0MvqlVUHXs&date="+date, null);
-        String url = "https://fabiusmaximus.files.wordpress.com/2012/12/20121230-no-error.png", text="Title not found";
+        Log.e("DATE", date);
+        String desc="No description", url = "https://fabiusmaximus.files.wordpress.com/2012/12/20121230-no-error.png", text="Title not found", author="unknown", captureDate="Date not found";
         try {
             url = jsonObject.get("url").toString();
             text = jsonObject.get("title").toString();
+            captureDate = jsonObject.get("date").toString();
+            author = jsonObject.get("copyright").toString();
+            desc = jsonObject.get("explanation").toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
         Log.e("url=",url);
         imageView.setImageBitmap(getBitmapFromURL(url));
         textView.setText(text);
+        textView5.setText("    "+desc);
+        textView5.setMovementMethod(new ScrollingMovementMethod());
+        textView2.setText("Published by "+author+" on " + captureDate);
     }
 
     public static Bitmap getBitmapFromURL(String src) {
